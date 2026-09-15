@@ -38,8 +38,8 @@ body {
 }
 
 /* Utilities */
-.hidden { display: none !important; }
 .active { display: flex !important; }
+.hidden { display: none !important; }
 
 /* Glassmorphism */
 .glass-card {
