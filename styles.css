@@ -222,7 +222,7 @@ input:focus {
 
 /* Table styles */
 .table-container { width: 100%; overflow-x: auto; border-radius: var(--radius); }
-table { width: 100%; border-collapse: collapse; text-align: left; }
+table { width: 100%; border-collapse: collapse; text-align: center; }
 th, td { padding: 1rem; border-bottom: 1px solid var(--surface-border); }
 th { color: var(--text-muted); font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
 tbody tr:hover { background: rgba(0,0,0,0.02); }
