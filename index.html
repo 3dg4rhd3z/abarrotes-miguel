@@ -64,10 +64,12 @@
                 <div id="pos-view" class="sub-view active">
                     <div class="pos-container">
                         <div class="pos-left">
-                            <header class="view-header">
+                            <header class="pos-header">
                                 <h1>Punto de Venta</h1>
-                                <div class="search-bar">
-                                    <input type="text" id="pos-barcode-input" placeholder="Escanea código (HID compatible)..." autofocus autocomplete="off">
+                                <div class="scanner-input">
+                                    <form id="pos-barcode-form" style="display:flex; width: 100%; margin:0;">
+                                        <input type="text" id="pos-barcode-input" placeholder="Escanea código (HID compatible)..." autofocus autocomplete="off" style="flex: 1;">
+                                    </form>
                                 </div>
                             </header>
                             <div class="table-container">
@@ -122,7 +124,9 @@
                 <div id="price-checker-view" class="sub-view hidden">
                     <div class="checker-container">
                         <h1>Checador</h1>
-                        <input type="text" id="checker-barcode-input" placeholder="Escanear código..." autocomplete="off">
+                        <form id="checker-barcode-form">
+                            <input type="text" id="checker-barcode-input" placeholder="Escanear código..." autocomplete="off">
+                        </form>
                         
                         <div id="checker-result" class="checker-result hidden glass-card">
                             <h2 id="checker-name">Producto</h2>

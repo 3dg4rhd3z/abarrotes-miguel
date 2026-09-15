@@ -132,14 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const amountReceivedInp = document.getElementById('amount-received');
     const posChange = document.getElementById('pos-change');
 
-    posInput.addEventListener('keydown', async (e) => {
-        if (e.key === 'Enter' || e.keyCode === 13) {
-            e.preventDefault();
-            const code = posInput.value.trim();
-            if (code) {
-                await processPosBarcode(code);
-                posInput.value = '';
-            }
+    const posForm = document.getElementById('pos-barcode-form');
+    posForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const code = posInput.value.trim();
+        if (code) {
+            await processPosBarcode(code);
+            posInput.value = '';
         }
     });
     
@@ -264,14 +263,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkerResult = document.getElementById('checker-result');
     const checkerNotFound = document.getElementById('checker-not-found');
 
-    checkerInput.addEventListener('keydown', async (e) => {
-        if (e.key === 'Enter' || e.keyCode === 13) {
-            e.preventDefault();
-            const code = checkerInput.value.trim();
-            if (code) {
-                await processCheckerBarcode(code);
-                checkerInput.value = '';
-            }
+    const checkerForm = document.getElementById('checker-barcode-form');
+    checkerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const code = checkerInput.value.trim();
+        if (code) {
+            await processCheckerBarcode(code);
+            checkerInput.value = '';
         }
     });
     
