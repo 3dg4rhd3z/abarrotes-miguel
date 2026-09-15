@@ -307,7 +307,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td style="font-family: monospace; color: var(--text-muted);">${p.code}</td>
                 <td>${p.name}</td>
                 <td>
-                    <div class="editable-price" data-code="${p.code}" title="Clic para editar">$${p.price.toFixed(2)}</div>
+                    <div class="editable-price" data-field="supplier_price" data-code="${p.code}" title="Clic para editar">$${(p.supplier_price || 0).toFixed(2)}</div>
+                </td>
+                <td>
+                    <div class="editable-price" data-field="profit_margin" data-code="${p.code}" title="Clic para editar">${(p.profit_margin || 0).toFixed(2)}%</div>
+                </td>
+                <td>
+                    <div class="editable-price" data-field="price" data-code="${p.code}" title="Clic para editar">$${p.price.toFixed(2)}</div>
                 </td>
                 <td>
                     <span class="badge ${p.stock <= 5 ? 'danger' : ''}">${p.stock}</span>
@@ -323,18 +329,33 @@ document.addEventListener('DOMContentLoaded', () => {
         // Eventos Editar rápido precio
         document.querySelectorAll('.editable-price').forEach(el => {
             el.addEventListener('click', function() {
-                const currentPrice = parseFloat(this.textContent.replace('$', ''));
-                this.innerHTML = `<input type="number" class="editing-input" value="${currentPrice}" step="0.01" min="0">`;
+                const field = this.getAttribute('data-field') || 'price';
+                const isMargin = field === 'profit_margin';
+                const currentVal = parseFloat(this.textContent.replace('$', '').replace('%', ''));
+                this.innerHTML = `<input type="number" class="editing-input" value="${currentVal}" step="${isMargin ? '0.1' : '0.01'}" min="0">`;
                 const input = this.querySelector('input');
                 input.focus();
                 
                 const saveInline = async () => {
                     const code = this.getAttribute('data-code');
-                    const newPrice = parseFloat(input.value);
-                    if (!isNaN(newPrice)) {
+                    const newVal = parseFloat(input.value);
+                    if (!isNaN(newVal)) {
                         this.innerHTML = "Guardando...";
                         const p = await db.getProductByCode(code);
-                        p.price = newPrice;
+                        p[field] = newVal;
+                        
+                        // Auto-cálculo
+                        if (field === 'supplier_price' || field === 'profit_margin') {
+                            const cost = p.supplier_price || 0;
+                            const margin = p.profit_margin || 0;
+                            p.price = cost * (1 + margin / 100);
+                        } else if (field === 'price') {
+                            const cost = p.supplier_price || 0;
+                            if (cost > 0) {
+                                p.profit_margin = ((p.price / cost) - 1) * 100;
+                            }
+                        }
+                        
                         await db.saveProduct(p);
                         refreshCatalog();
                     }
@@ -358,6 +379,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('prod-original-code').value = p.code;
                     document.getElementById('prod-code').value = p.code;
                     document.getElementById('prod-name').value = p.name;
+                    document.getElementById('prod-supplier-price').value = p.supplier_price || 0;
+                    document.getElementById('prod-profit-margin').value = p.profit_margin || 0;
                     document.getElementById('prod-price').value = p.price;
                     document.getElementById('prod-stock').value = p.stock;
                     document.getElementById('modal-title').textContent = 'Editar Producto';
@@ -380,7 +403,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('catalog-search').addEventListener('input', refreshCatalog);
 
-    // Add Product
     document.getElementById('btn-add-product').addEventListener('click', () => {
         document.getElementById('product-form').reset();
         document.getElementById('prod-original-code').value = '';
@@ -388,20 +410,45 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('product-modal').classList.remove('hidden');
     });
 
+    // Auto-calculo en Modal
+    const inCost = document.getElementById('prod-supplier-price');
+    const inMargin = document.getElementById('prod-profit-margin');
+    const inPrice = document.getElementById('prod-price');
+
+    const updatePrice = () => {
+        const cost = parseFloat(inCost.value) || 0;
+        const margin = parseFloat(inMargin.value) || 0;
+        inPrice.value = (cost * (1 + margin / 100)).toFixed(2);
+    };
+
+    const updateMargin = () => {
+        const cost = parseFloat(inCost.value) || 0;
+        const price = parseFloat(inPrice.value) || 0;
+        if (cost > 0) {
+            inMargin.value = (((price / cost) - 1) * 100).toFixed(2);
+        }
+    };
+
+    inCost.addEventListener('input', updatePrice);
+    inMargin.addEventListener('input', updatePrice);
+    inPrice.addEventListener('input', updateMargin);
+
     document.getElementById('product-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const code = document.getElementById('prod-code').value.trim();
         const originalCode = document.getElementById('prod-original-code').value;
         const name = document.getElementById('prod-name').value.trim();
-        const price = parseFloat(document.getElementById('prod-price').value);
-        const stock = parseInt(document.getElementById('prod-stock').value);
+        const supplier_price = parseFloat(document.getElementById('prod-supplier-price').value) || 0;
+        const profit_margin = parseFloat(document.getElementById('prod-profit-margin').value) || 0;
+        const price = parseFloat(document.getElementById('prod-price').value) || 0;
+        const stock = parseInt(document.getElementById('prod-stock').value) || 0;
 
         if (originalCode && originalCode !== code) {
             // Si cambió el código, borrar viejo y guardar nuevo (simplificación)
             await db.deleteProduct(originalCode);
         }
 
-        await db.saveProduct({ code, name, price, stock });
+        await db.saveProduct({ code, name, supplier_price, profit_margin, price, stock });
         document.getElementById('product-modal').classList.add('hidden');
         refreshCatalog();
     });

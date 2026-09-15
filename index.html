@@ -149,7 +149,9 @@
                                 <tr>
                                     <th>Código</th>
                                     <th>Nombre</th>
-                                    <th>Precio</th>
+                                    <th>Costo (Prov.)</th>
+                                    <th>Margen (%)</th>
+                                    <th>P. Público</th>
                                     <th>Stock</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -224,7 +226,15 @@
                     <input type="text" id="prod-name" required autocomplete="off">
                 </div>
                 <div class="input-group">
-                    <label>Precio ($)</label>
+                    <label>Costo Proveedor ($)</label>
+                    <input type="number" id="prod-supplier-price" required min="0" step="0.01" value="0">
+                </div>
+                <div class="input-group">
+                    <label>Margen de Ganancia (%)</label>
+                    <input type="number" id="prod-profit-margin" required min="0" step="0.1" value="0">
+                </div>
+                <div class="input-group">
+                    <label>Precio Público ($)</label>
                     <input type="number" id="prod-price" required min="0" step="0.01">
                 </div>
                 <div class="input-group">
