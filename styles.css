@@ -65,7 +65,7 @@ body {
 
 /* Typography */
 h1, h2, h3 { font-weight: 600; }
-.highlight { color: var(--primary-color); font-weight: 700; font-size: 1.5rem; }
+.highlight { color: var(--primary-color); font-weight: 700; font-size: 2.5rem; } /* Aumentado para cobrar */
 
 /* Buttons */
 .btn {
@@ -236,7 +236,7 @@ tbody tr { transition: background var(--transition); }
 .pos-right { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; height: fit-content; }
 .totals .row, .payment-section .row { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 1.1rem; }
 .total-row { border-top: 1px solid var(--surface-border); padding-top: 1rem; margin-top: 0.5rem; }
-.change-row { margin-top: 1rem; font-weight: 600; font-size: 1.25rem; color: var(--success-color); }
+.change-row { margin-top: 1rem; font-weight: 600; font-size: 2rem; color: var(--success-color); } /* Aumentado el tamaño del cambio */
 .payment-section label { display: block; margin-bottom: 0.5rem; color: var(--text-muted); }
 .item-actions button { background: transparent; border: none; color: var(--danger-color); cursor: pointer; padding: 0.25rem; border-radius: 4px; transition: var(--transition); }
 .item-actions button:hover { background: rgba(239, 68, 68, 0.1); }
@@ -248,7 +248,7 @@ tbody tr { transition: background var(--transition); }
 .checker-container p { color: var(--text-muted); margin-bottom: 2rem; }
 .checker-container input { font-size: 1.5rem; padding: 1rem; text-align: center; margin-bottom: 3rem; }
 .checker-result { padding: 3rem 2rem; text-align: center; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.checker-price { font-size: 4rem; font-weight: 700; color: var(--success-color); margin: 1rem 0; }
+.checker-price { font-size: 6rem; font-weight: 700; color: var(--success-color); margin: 1rem 0; } /* Aumentado el tamaño al checar precio */
 .checker-stock { font-size: 1.2rem; color: var(--text-muted); }
 .error-card { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger-color); border-radius: var(--radius); }
 .error-card h2 { color: var(--danger-color); }
