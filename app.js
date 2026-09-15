@@ -132,8 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const amountReceivedInp = document.getElementById('amount-received');
     const posChange = document.getElementById('pos-change');
 
-    posInput.addEventListener('keypress', async (e) => {
-        if (e.key === 'Enter') {
+    posInput.addEventListener('keydown', async (e) => {
+        if (e.key === 'Enter' || e.keyCode === 13) {
             e.preventDefault();
             const code = posInput.value.trim();
             if (code) {
@@ -264,8 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkerResult = document.getElementById('checker-result');
     const checkerNotFound = document.getElementById('checker-not-found');
 
-    checkerInput.addEventListener('keypress', async (e) => {
-        if (e.key === 'Enter') {
+    checkerInput.addEventListener('keydown', async (e) => {
+        if (e.key === 'Enter' || e.keyCode === 13) {
             e.preventDefault();
             const code = checkerInput.value.trim();
             if (code) {
