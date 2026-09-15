@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="editable-price" data-field="supplier_price" data-code="${p.code}" title="Clic para editar">$${(p.supplier_price || 0).toFixed(2)}</div>
                 </td>
                 <td>
-                    <div class="editable-price" data-field="profit_margin" data-code="${p.code}" title="Clic para editar">${(p.profit_margin || 0).toFixed(2)}%</div>
+                    <div class="editable-price" data-field="profit_margin" data-code="${p.code}" title="Clic para editar">$${(p.profit_margin || 0).toFixed(2)}</div>
                 </td>
                 <td>
                     <div class="editable-price" data-field="price" data-code="${p.code}" title="Clic para editar">$${p.price.toFixed(2)}</div>
@@ -328,9 +328,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.editable-price').forEach(el => {
             el.addEventListener('click', function() {
                 const field = this.getAttribute('data-field') || 'price';
-                const isMargin = field === 'profit_margin';
                 const currentVal = parseFloat(this.textContent.replace('$', '').replace('%', ''));
-                this.innerHTML = `<input type="number" class="editing-input" value="${currentVal}" step="${isMargin ? '0.1' : '0.01'}" min="0">`;
+                this.innerHTML = `<input type="number" class="editing-input" value="${currentVal}" step="0.01" min="0">`;
                 const input = this.querySelector('input');
                 input.focus();
                 
@@ -346,12 +345,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (field === 'supplier_price' || field === 'profit_margin') {
                             const cost = p.supplier_price || 0;
                             const margin = p.profit_margin || 0;
-                            p.price = cost * (1 + margin / 100);
+                            p.price = cost + margin;
                         } else if (field === 'price') {
                             const cost = p.supplier_price || 0;
-                            if (cost > 0) {
-                                p.profit_margin = ((p.price / cost) - 1) * 100;
-                            }
+                            p.profit_margin = Math.max(0, p.price - cost);
                         }
                         
                         await db.saveProduct(p);
@@ -416,15 +413,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const updatePrice = () => {
         const cost = parseFloat(inCost.value) || 0;
         const margin = parseFloat(inMargin.value) || 0;
-        inPrice.value = (cost * (1 + margin / 100)).toFixed(2);
+        inPrice.value = (cost + margin).toFixed(2);
     };
 
     const updateMargin = () => {
         const cost = parseFloat(inCost.value) || 0;
         const price = parseFloat(inPrice.value) || 0;
-        if (cost > 0) {
-            inMargin.value = (((price / cost) - 1) * 100).toFixed(2);
-        }
+        inMargin.value = Math.max(0, price - cost).toFixed(2);
     };
 
     inCost.addEventListener('input', updatePrice);
